@@ -5,8 +5,7 @@ author:
   - name: Ethan Krakar
     affiliations: University of Missouri
     corresponding: true
-abstract: "A brief summary of the paper goes here."
-keywords: [keyword1, keyword2]
+abstract: This is an analysis done on a previously discussed essay regarding remote and in-person work productivity. This research aims to answer whether remote work decreases productivity.
 format:
   apaquarto-html:
     toc: false
@@ -16,7 +15,19 @@ bibliography: refs.bib
 ---
 
 
-## Proposal
-Insert your proposal text here. If you want to, you can add more section headings by using hashtags.
+## Introduction
 
-Here is an example of citing a paper in parentheses, where the refs.bib file contains the paper details [@fakeone2023]. And @faketwo2020 shows how it is possible to cite authors in text. To cite real articles, upload the article to an LLM (or point it to the web version of the article) and ask for the reference in bibtex format. Then paste the result at the end of the refs.bib file.
+In recent years, society has stood divided on remote work. Some claim that remote work causes work productivity to slip due to distractions, home activities, etc, while others, have claimed that they feel they are able to work more productively than in the office because they can deal with their home life and work life at the same time. This introduces a question, who is right?
+
+In this paper, I attempt to see if remote work reduces productivity compared to in-person work. I will use an online data set from Kaggle to get my results. I hypothesize that remote work will reduce productivity.
+
+## Methods
+
+In order to conduct this experiment, I will use results from the Kaggle online data set to create comparisons between remote work respondents and office work respondents. I will specifically focus on the variable: Do you think that working from home increases your work productivity? Additionally, the data set has occupations, years in the workforce, and age group which can also be used to find results. I will use R Studio to do my analyses. 
+
+In my analysis, I intend to compare whether job occupation impacts remote work productivity, whether age impacts remote work productivity, and whether years in the workforce impact work productivity. By comparing these groups, we can find out if productivity is either reduced or increased based on several factors. With the results of these analyses, I will be able to answer my hypothesis, and make suggestions for future research.
+
+## Bibliography
+
+https://www.kaggle.com/datasets/mohamedelzeini/the-impacts-of-working-remotely-and-in-an-office
+
