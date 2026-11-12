@@ -27,6 +27,109 @@ In order to conduct this experiment, I will use results from the Kaggle online d
 
 In my analysis, I intend to compare whether job occupation impacts remote work productivity, whether age impacts remote work productivity, and whether years in the workforce impact work productivity. By comparing these groups, we can find out if productivity is either reduced or increased based on several factors. With the results of these analyses, I will be able to answer my hypothesis, and make suggestions for future research.
 
+## Results
+
+
+```{r}
+#| label: fig-work-arrangement
+#| fig-cap: "Remote Work Productivity by Experience and Work Arrangement"
+#| fig-width: 11
+#| fig-height: 8
+
+library(tidyverse)
+
+ogsurvey <- read.csv("The Impacts of Working Remotely and in an Office Survey 2.csv")
+
+ogsurvey %>%
+  group_by(
+    Years.of.Experience,
+    Current.Work.Arrangement,
+    Do.you.think.that.working.from.home.increases.your.work.productivity.
+  ) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  ggplot(aes(
+    x = Years.of.Experience,
+    y = Count,
+    fill = Do.you.think.that.working.from.home.increases.your.work.productivity.
+  )) +
+  geom_col(position = "dodge", width = 0.7) +
+  facet_wrap(~Current.Work.Arrangement, ncol = 1) +
+  labs(
+    x = "Years of Experience",
+    y = "Number of Respondents",
+    fill = "Does Remote Work Improve Productivity?"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(size = 9),
+    strip.text = element_text(face = "bold", size = 12),
+    legend.position = "bottom",
+    panel.spacing = unit(1.5, "lines")
+  )
+
+
+```{r}
+#| label: fig-experience-arrangement
+#| fig-cap: "Perceived Productivity Benefits by Experience and Work Arrangement"
+#| fig-width: 11
+#| fig-height: 7
+
+library(tidyverse)
+
+ogsurvey <- read.csv("The Impacts of Working Remotely and in an Office Survey 2.csv")
+
+ogsurvey %>%
+  group_by(
+    Years.of.Experience,
+    Current.Work.Arrangement,
+    Do.you.think.that.working.from.home.increases.your.work.productivity.
+  ) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  ggplot(aes(
+    x = Years.of.Experience,
+    y = Count,
+    fill = Do.you.think.that.working.from.home.increases.your.work.productivity.
+  )) +
+  geom_col(position = "fill", width = 0.7) +
+  facet_wrap(~Current.Work.Arrangement, ncol = 1) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    x = "Years of Experience",
+    y = "Percentage of Respondents",
+    fill = "Remote Work Improves Productivity"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 25, hjust = 1, size = 9),
+    strip.text = element_text(face = "bold", size = 12),
+    legend.position = "bottom",
+    panel.spacing = unit(1.2, "lines")
+  )
+
+
+#| label: fig-industry-productivity
+#| fig-cap: "Perceived Productivity Benefits by Industry"
+#| fig-width: 10
+#| fig-height: 6
+
+ogsurvey %>%
+  ggplot(aes(x = Industry,
+             fill = Do.you.think.that.working.from.home.increases.your.work.productivity.)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    x = "Industry",
+    y = "Percentage of Respondents",
+    fill = "Remote Work Improves Productivity"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    legend.position = "bottom"
+  )
+```
+
+
 ## Bibliography
 
 https://www.kaggle.com/datasets/mohamedelzeini/the-impacts-of-working-remotely-and-in-an-office
