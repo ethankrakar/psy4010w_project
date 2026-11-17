@@ -19,7 +19,7 @@ bibliography: refs.bib
 
 In recent years, society has stood divided on remote work. Some claim that remote work causes work productivity to slip due to distractions, home activities, etc, while others, have claimed that they feel they are able to work more productively than in the office because they can deal with their home life and work life at the same time. This introduces a question, who is right?
 
-In this paper, I attempt to see if remote work reduces productivity compared to in-person work. I will use an online data set from Kaggle to get my results. I hypothesize that remote work will reduce productivity.
+In this paper, I attempt to see if remote work reduces productivity compared to in-person work. I will use an online data set from Kaggle to get my results. I hypothesize that remote work will reduce self-perceived productivity.
 
 ## Methods
 
@@ -130,30 +130,113 @@ ogsurvey %>%
 ```
 
 ```{r}
-#| label: chi-square-tests
+#| label: setup
 
 library(tidyverse)
-library(effectsize)   # install.packages("effectsize") if needed
+set.seed(123)   # makes simulated p-values reproducible
 
 df <- read.csv("The Impacts of Working Remotely and in an Office Survey 2.csv") %>%
   rename(productivity = Do.you.think.that.working.from.home.increases.your.work.productivity.,
          arrangement  = Current.Work.Arrangement,
          experience   = Years.of.Experience,
          age          = Age.Group,
-         industry     = Industry)
+         industry     = Industry,
+         gender       = Gender)
 
-# Main test: work arrangement vs. productivity
+# Order the age/experience groups correctly (sorted by the first number in each label)
+df <- df %>%
+  mutate(
+    prod_bin   = as.integer(productivity == "Yes"),
+    age        = factor(age, levels = unique(age)[order(parse_number(unique(age)))]),
+    experience = factor(experience, levels = unique(experience)[order(parse_number(unique(experience)))]),
+    age_num    = as.numeric(age),
+    exp_num    = as.numeric(experience)
+  )
+
+# Cramér's V (effect size) without needing extra packages
+cramers_v <- function(tab) {
+  chi <- suppressWarnings(chisq.test(tab, correct = FALSE))$statistic
+  unname(sqrt(chi / (sum(tab) * (min(dim(tab)) - 1))))
+}
+```
+```{r}
+#| label: chi-square
+
+# Main test in detail: work arrangement vs. productivity
 tab <- table(df$arrangement, df$productivity)
-tab                               # counts
-round(prop.table(tab, 1), 3)      # row percentages
+tab                                # counts
+round(prop.table(tab, 1), 3)       # row percentages
+main_test <- chisq.test(tab)
+main_test                          # chi-square, df, p-value
+round(main_test$expected, 1)       # check assumption: expected counts >= 5
+round(main_test$stdres, 2)         # standardized residuals (beyond ±2 = notable)
+cramers_v(tab)                     # effect size
 
-test <- chisq.test(tab)
-test                              # chi-square, df, p-value
-test$expected                     # check: all expected counts should be >= 5
-round(test$stdres, 2)             # standardized residuals (beyond ±2 = notable)
-cramers_v(tab)                    # effect size
+# Same test for every predictor, in one table
+run_chisq <- function(data, var) {
+  tab  <- table(data[[var]], data$productivity)
+  test <- suppressWarnings(chisq.test(tab))
+  simulated <- min(test$expected) < 5          # fall back to simulation if cells are small
+  if (simulated) test <- chisq.test(tab, simulate.p.value = TRUE, B = 10000)
+  tibble(Predictor = var,
+         N         = sum(tab),
+         ChiSq     = round(unname(test$statistic), 2),
+         df        = if (simulated) NA_real_ else unname(test$parameter),
+         p         = test$p.value,
+         CramersV  = round(cramers_v(tab), 3),
+         Simulated = simulated)
+}
+
+chisq_results <- map_dfr(c("arrangement", "industry", "experience", "age"),
+                         ~ run_chisq(df, .x)) %>%
+  mutate(p_holm = p.adjust(p, method = "holm"))   # correct for multiple tests
+chisq_results
+
+# Which arrangements differ from each other?
+pairwise.prop.test(table(df$arrangement, df$productivity)[, "Yes"],
+                   rowSums(table(df$arrangement, df$productivity)),
+                   p.adjust.method = "holm")
+
+# Residuals for industry (shows which industries drive the result)
+round(chisq.test(table(df$industry, df$productivity))$stdres, 2)
 ```
 
+```{r}
+#| label: trend-tests
+
+# Does the odds of "Yes" rise or fall steadily across ordered groups?
+age_trend <- glm(prod_bin ~ age_num, data = df, family = binomial)
+exp_trend <- glm(prod_bin ~ exp_num, data = df, family = binomial)
+
+summary(age_trend)$coefficients   # significant age_num = linear trend with age
+summary(exp_trend)$coefficients   # significant exp_num = linear trend with experience
+```
+
+```{r}
+#| label: logistic-regression
+
+# All predictors together; reference group for arrangement = Fully In-Office
+df$arrangement <- relevel(factor(df$arrangement), ref = "Fully In-Office")
+
+m <- glm(prod_bin ~ arrangement + experience + industry + age + gender,
+         data = df, family = binomial)
+summary(m)
+
+# Odds ratios with 95% confidence intervals
+or_table <- exp(cbind(OR = coef(m), suppressMessages(confint(m))))
+round(or_table, 2)
+
+# Does the full model beat an empty model?
+anova(m, test = "Chisq")
+```
+
+```{r}
+#| label: remote-only
+
+remote_only <- df %>% filter(arrangement == "Fully Remote")
+
+map_dfr(c("age", "experience"), ~ run_chisq(remote_only, .x))
+```
 ## Bibliography
 
 https://www.kaggle.com/datasets/mohamedelzeini/the-impacts-of-working-remotely-and-in-an-office
