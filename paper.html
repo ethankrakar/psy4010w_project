@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.18">
+<meta name="generator" content="quarto-1.10.19">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ethan Krakar">
 
-<title>Psych 4010W Project: </title>
+<title>Psych 4010W Project: Remote Work and Productivity</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -36,7 +36,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="paper_files/libs/quarto-html/popper.min.js"></script>
 <script src="paper_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="paper_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="paper_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="paper_files/libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="paper_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="paper_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="paper_files/libs/bootstrap/bootstrap-dd25d5b067e6c8f13d6a20b5faafd803.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -61,7 +61,7 @@ ul.task-list li input[type="checkbox"] {
 <br>
 
 <section id="title" class="level1 title unnumbered unlisted">
-<h1 class="title unnumbered unlisted">Psych 4010W Project: <insert title=""></insert></h1>
+<h1 class="title unnumbered unlisted">Psych 4010W Project: Remote Work and Productivity</h1>
 <div class="Author">
 <br>
 
@@ -78,7 +78,7 @@ ul.task-list li input[type="checkbox"] {
 <br>
 </section>
 <section id="firstheader" class="level1 title unnumbered">
-<h1 class="title unnumbered">Psych 4010W Project: <insert title=""></insert></h1>
+<h1 class="title unnumbered">Psych 4010W Project: Remote Work and Productivity</h1>
 <section id="introduction" class="level2">
 <h2 data-anchor-id="introduction">Introduction</h2>
 <p>In recent years, society has stood divided on remote work. Some claim that remote work causes work productivity to slip due to distractions, home activities, etc, while others, have claimed that they feel they are able to work more productively than in the office because they can deal with their home life and work life at the same time. This introduces a question, who is right?</p>
@@ -96,7 +96,7 @@ ul.task-list li input[type="checkbox"] {
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.2.1     ✔ readr     2.2.0
 ✔ forcats   1.0.1     ✔ stringr   1.6.0
-✔ ggplot2   4.0.2     ✔ tibble    3.3.1
+✔ ggplot2   4.0.4     ✔ tibble    3.3.1
 ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
 ✔ purrr     1.2.2     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -156,6 +156,50 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </figure>
 </div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                 
+                   No Yes
+  Fully In-Office 159 141
+  Fully Remote     56 241
+  Hybrid           88 315</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 
+                     No   Yes
+  Fully In-Office 0.530 0.470
+  Fully Remote    0.189 0.811
+  Hybrid          0.218 0.782</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  tab
+X-squared = 105.29, df = 2, p-value &lt; 2.2e-16</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 
+                       No     Yes
+  Fully In-Office  90.900 209.100
+  Fully Remote     89.991 207.009
+  Hybrid          122.109 280.891</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 
+                      No    Yes
+  Fully In-Office  10.23 -10.23
+  Fully Remote     -5.12   5.12
+  Hybrid           -4.79   4.79</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Cramer's V (adj.) |       95% CI
+--------------------------------
+0.32              | [0.27, 1.00]
+
+- One-sided CIs: upper bound fixed at [1.00].</code></pre>
 </div>
 </div>
 </section>
