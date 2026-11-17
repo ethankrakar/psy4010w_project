@@ -1,5 +1,5 @@
 ---
-title: "Psych 4010W Project: <insert title>"
+title: "Psych 4010W Project: Remote Work and Productivity"
 shorttitle: "<insert short title>"
 author:
   - name: Ethan Krakar
