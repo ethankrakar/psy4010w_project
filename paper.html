@@ -27,7 +27,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="paper_files/libs/clipboard/clipboard.min.js"></script>
@@ -81,13 +100,17 @@ ul.task-list li input[type="checkbox"] {
 <h1 class="title unnumbered">Psych 4010W Project: Remote Work and Self- Reported Productivity</h1>
 <section id="introduction" class="level2">
 <h2 data-anchor-id="introduction">Introduction</h2>
-<p>In recent years, society has stood divided on remote work. Some claim that remote work causes work productivity to slip due to distractions, home activities, etc, while others, have claimed that they feel they are able to work more productively than in the office because they can deal with their home life and work life at the same time. This introduces a question, who is right?</p>
-<p>In this paper, I attempt to see if remote work reduces productivity compared to in-person work. I will use an online data set from Kaggle to get my results. I hypothesize that remote work will reduce self-perceived productivity.</p>
+<p>In recent years, society has stood divided on remote work. Some claim that remote work causes work productivity to slip due to distractions, home activities, etc, while others, have claimed that they feel they are able to work more productively than in the office because they can deal with their home life and work life at the same time.</p>
+<p>Previous studies such as Bloom et al.&nbsp;had found that working from home can improve productivity. Many cited that their gains are believed to have come from higher job satisfaction and lower quitting rates.</p>
+<p>Furthermore, studies like the one Allen et. al <span class="citation" data-cites="article">(<a href="#ref-article" role="doc-biblioref"><strong>article?</strong></a>)</span>{Allenet.al2015 performed found that working from home was generally associated with higher job satisfaction, better self-reported productivity, and other mental health benefits.</p>
+<p>Finally, meta-analyses such as Gajendran and Harrison <span class="citation" data-cites="Gajendran">(<a href="#ref-Gajendran" role="doc-biblioref"><strong>Gajendran?</strong></a>)</span> found that remote work had beneficial impacts on perceived work life balance. Although, the analysis did find that many remote workers tended to have weaker relationships with their coworkers.</p>
+<p>The literature reviewed points to one obvious theme, remote work has its benefits. But the question yet to be answered is: Does remote work’s benefits yield the same results for different demographics?</p>
+<p>In this paper, I will attempt to see if remote work’s benefits reach across different demographics. I will use an online data set from Kaggle to get my results. I hypothesize that remote work will increase self-perceived productivity across broad demographics.</p>
 </section>
 <section id="methods" class="level2">
 <h2 data-anchor-id="methods">Methods</h2>
-<p>In order to conduct this experiment, I will use results from the Kaggle online data set to create comparisons between remote work respondents and office work respondents. I will specifically focus on the variable: Do you think that working from home increases your work productivity? Additionally, the data set has occupations, years in the workforce, and age group which can also be used to find results. I will use R Studio to do my analyses.</p>
-<p>In my analysis, I intend to compare whether job occupation impacts remote work productivity, whether age impacts remote work productivity, and whether years in the workforce impact work productivity. By comparing these groups, we can find out if productivity is either reduced or increased based on several factors. With the results of these analyses, I will be able to answer my hypothesis, and make suggestions for future research.</p>
+<p>In order to conduct this experiment, I will use results from the Kaggle online data set to create comparisons between remote work respondents and office work respondents. I will specifically focus on the variable: Do you think that working from home increases your work productivity? Additionally, the data set has occupations, years in the workforce, and age group which can also be used to find results. I will use R Studio and AI assistance to do my analyses.</p>
+<p>In my analysis, I intend to compare whether job occupation impacts remote work productivity, whether age impacts remote work productivity, and whether years in the workforce impact work productivity. By comparing these groups, we can find out if perceived productivity productivity increases across demographics. With the results of these analyses, I will be able to answer my hypothesis, and make suggestions for future research.</p>
 </section>
 <section id="results" class="level2">
 <h2 data-anchor-id="results">Results</h2>
@@ -95,7 +118,7 @@ ul.task-list li input[type="checkbox"] {
 <h3 data-anchor-id="work-arrangement">Work Arrangement</h3>
 <div class="cell FigureWithoutNote" data-custom-style="FigureWithoutNote">
 <div class="cell-output-display">
-<div id="fig-arrangement" class="quarto-float quarto-figure quarto-figure-center" data-fignum="1" prefix="">
+<div id="fig-arrangement" class="quarto-float quarto-figure quarto-figure-center" prefix="" data-fignum="1">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-arrangement-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -113,7 +136,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="cell FigureWithoutNote" prefix="" data-tblnum="1" data-custom-style="FigureWithoutNote">
-<div id="tbl-arrangement-desc" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="1" prefix="">
+<div id="tbl-arrangement-desc" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-arrangement-desc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -161,7 +184,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="cell FigureWithoutNote" prefix="" data-tblnum="2" data-custom-style="FigureWithoutNote">
-<div id="tbl-pairwise" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="2" prefix="">
+<div id="tbl-pairwise" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="2">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pairwise-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -212,7 +235,7 @@ ul.task-list li input[type="checkbox"] {
 <h3 data-anchor-id="industry">Industry</h3>
 <div class="cell FigureWithoutNote" data-custom-style="FigureWithoutNote">
 <div class="cell-output-display">
-<div id="fig-industry" class="quarto-float quarto-figure quarto-figure-center" data-fignum="2" prefix="">
+<div id="fig-industry" class="quarto-float quarto-figure quarto-figure-center" prefix="" data-fignum="2">
 <figure class="quarto-float quarto-float-fig figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-fig" id="fig-industry-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -240,7 +263,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="summary-of-chi-square-tests" class="level3">
 <h3 data-anchor-id="summary-of-chi-square-tests">Summary of Chi-Square Tests</h3>
 <div class="cell FigureWithoutNote" prefix="" data-tblnum="3" data-custom-style="FigureWithoutNote">
-<div id="tbl-chisq" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="3" prefix="">
+<div id="tbl-chisq" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chisq-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -309,13 +332,13 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="AfterWithoutNote" data-custom-style="AfterWithoutNote">
-<p>[WRITE A SENTENCE OR TWO SUMMARIZING THE TESTS, citing <a href="#tbl-chisq" class="quarto-xref" aria-expanded="false">Table&nbsp;3</a>. If any row shows NA for df, that test used a simulated p-value because some expected counts were below 5; say so.]</p>
+<p>Work arrangement and industry were significantly associated with perceived productivity, even after Holm correction, whereas age group and years of experience were not (<a href="#tbl-chisq" class="quarto-xref" aria-expanded="false">Table&nbsp;3</a>)</p>
 </div>
 </section>
 <section id="logistic-regression" class="level3">
 <h3 data-anchor-id="logistic-regression">Logistic Regression</h3>
 <div class="cell FigureWithoutNote" prefix="" data-tblnum="4" data-custom-style="FigureWithoutNote">
-<div id="tbl-logistic" class="cell quarto-float quarto-figure quarto-figure-center" data-tblnum="4" prefix="">
+<div id="tbl-logistic" class="cell quarto-float quarto-figure quarto-figure-center" prefix="" data-tblnum="4">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-logistic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="FigureTitle" data-custom-style="FigureTitle">
@@ -488,6 +511,12 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-anchor-id="bibliography">Bibliography</h2>
 <p>https://www.kaggle.com/datasets/mohamedelzeini/the-impacts-of-working-remotely-and-in-an-office</p>
 </section>
+</section>
+<section class="level1">
+<h1>References</h1>
+<div id="refs" class="references" role="list">
+
+</div>
 </section>
 
 </main>
