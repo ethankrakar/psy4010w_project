@@ -177,7 +177,7 @@ chisq_results %>%
   knitr::kable(align = "lrrrrrr")
 ```
 
-[WRITE A SENTENCE OR TWO SUMMARIZING THE TESTS, citing @tbl-chisq. If any row shows NA for df, that test used a simulated p-value because some expected counts were below 5; say so.]
+Work arrangement and industry were significantly associated with perceived productivity, even after Holm correction, whereas age group and years of experience were not (@tbl-chisq)
 
 ### Logistic Regression
 
