@@ -79,7 +79,7 @@ run_chisq <- function(data, var) {
 }
 ```
 
-[WRITE A SHORT OVERVIEW OF YOUR RESULTS HERE.]
+
 
 ### Work Arrangement
 
@@ -125,7 +125,7 @@ as.data.frame(as.table(pw)) %>%
   knitr::kable(align = "llr")
 ```
 
-[WRITE YOUR RESULTS FOR WORK ARRANGEMENT HERE. Cite the figure and tables with @fig-arrangement, @tbl-arrangement-desc, and @tbl-pairwise.]
+The results from the work arrangement section show that those who work remotely and hybrid are 4 to 5 times as likely as in office workers to say working from home boosts productivity. Hybrid and remote workers don't diffe from each other. 
 
 ### Industry
 
@@ -146,11 +146,11 @@ ggplot(df, aes(x = industry, fill = productivity)) +
         legend.position = "bottom")
 ```
 
-[WRITE YOUR RESULTS FOR INDUSTRY HERE. Cite the figure with @fig-industry.]
+In terms of industry, tech is extremely high while retail/hospitality is low. This makes sense given the apparent difficulties with remote work in retail/hospitality.
 
 ### Age and Years of Experience
 
-[WRITE YOUR RESULTS FOR AGE AND YEARS OF EXPERIENCE HERE.]
+Age and years of experience does not appear to have an effect.
 
 ### Summary of Chi-Square Tests
 
