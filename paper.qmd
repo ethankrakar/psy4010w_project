@@ -28,113 +28,14 @@ In order to conduct this experiment, I will use results from the Kaggle online d
 In my analysis, I intend to compare whether job occupation impacts remote work productivity, whether age impacts remote work productivity, and whether years in the workforce impact work productivity. By comparing these groups, we can find out if productivity is either reduced or increased based on several factors. With the results of these analyses, I will be able to answer my hypothesis, and make suggestions for future research.
 
 ## Results
-
-
-```{r}
-#| label: fig-work-arrangement
-#| fig-cap: "Remote Work Productivity by Experience and Work Arrangement"
-#| fig-width: 11
-#| fig-height: 8
-
-library(tidyverse)
-
-ogsurvey <- read.csv("The Impacts of Working Remotely and in an Office Survey 2.csv")
-
-ogsurvey %>%
-  group_by(
-    Years.of.Experience,
-    Current.Work.Arrangement,
-    Do.you.think.that.working.from.home.increases.your.work.productivity.
-  ) %>%
-  summarise(Count = n(), .groups = "drop") %>%
-  ggplot(aes(
-    x = Years.of.Experience,
-    y = Count,
-    fill = Do.you.think.that.working.from.home.increases.your.work.productivity.
-  )) +
-  geom_col(position = "dodge", width = 0.7) +
-  facet_wrap(~Current.Work.Arrangement, ncol = 1) +
-  labs(
-    x = "Years of Experience",
-    y = "Number of Respondents",
-    fill = "Does Remote Work Improve Productivity?"
-  ) +
-  theme_minimal(base_size = 12) +
-  theme(
-    axis.text.x = element_text(size = 9),
-    strip.text = element_text(face = "bold", size = 12),
-    legend.position = "bottom",
-    panel.spacing = unit(1.5, "lines")
-  )
-
-
-```{r}
-#| label: fig-experience-arrangement
-#| fig-cap: "Perceived Productivity Benefits by Experience and Work Arrangement"
-#| fig-width: 11
-#| fig-height: 7
-
-library(tidyverse)
-
-ogsurvey <- read.csv("The Impacts of Working Remotely and in an Office Survey 2.csv")
-
-ogsurvey %>%
-  group_by(
-    Years.of.Experience,
-    Current.Work.Arrangement,
-    Do.you.think.that.working.from.home.increases.your.work.productivity.
-  ) %>%
-  summarise(Count = n(), .groups = "drop") %>%
-  ggplot(aes(
-    x = Years.of.Experience,
-    y = Count,
-    fill = Do.you.think.that.working.from.home.increases.your.work.productivity.
-  )) +
-  geom_col(position = "fill", width = 0.7) +
-  facet_wrap(~Current.Work.Arrangement, ncol = 1) +
-  scale_y_continuous(labels = scales::percent) +
-  labs(
-    x = "Years of Experience",
-    y = "Percentage of Respondents",
-    fill = "Remote Work Improves Productivity"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 25, hjust = 1, size = 9),
-    strip.text = element_text(face = "bold", size = 12),
-    legend.position = "bottom",
-    panel.spacing = unit(1.2, "lines")
-  )
-
-
-#| label: fig-industry-productivity
-#| fig-cap: "Perceived Productivity Benefits by Industry"
-#| fig-width: 10
-#| fig-height: 6
-
-ogsurvey %>%
-  ggplot(aes(x = Industry,
-             fill = Do.you.think.that.working.from.home.increases.your.work.productivity.)) +
-  geom_bar(position = "fill") +
-  scale_y_continuous(labels = scales::percent) +
-  labs(
-    x = "Industry",
-    y = "Percentage of Respondents",
-    fill = "Remote Work Improves Productivity"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 35, hjust = 1),
-    legend.position = "bottom"
-  )
-```
-
 ```{r}
 #| label: setup
+#| include: false
 
 library(tidyverse)
 set.seed(123)   # makes simulated p-values reproducible
 
+# NOTE: the CSV must be in the same folder as this .qmd file
 df <- read.csv("The Impacts of Working Remotely and in an Office Survey 2.csv") %>%
   rename(productivity = Do.you.think.that.working.from.home.increases.your.work.productivity.,
          arrangement  = Current.Work.Arrangement,
@@ -153,30 +54,20 @@ df <- df %>%
     exp_num    = as.numeric(experience)
   )
 
-# Cramér's V (effect size) without needing extra packages
+# Helper: Cramér's V (effect size) without needing extra packages
 cramers_v <- function(tab) {
   chi <- suppressWarnings(chisq.test(tab, correct = FALSE))$statistic
   unname(sqrt(chi / (sum(tab) * (min(dim(tab)) - 1))))
 }
-```
-```{r}
-#| label: chi-square
 
-# Main test in detail: work arrangement vs. productivity
-tab <- table(df$arrangement, df$productivity)
-tab                                # counts
-round(prop.table(tab, 1), 3)       # row percentages
-main_test <- chisq.test(tab)
-main_test                          # chi-square, df, p-value
-round(main_test$expected, 1)       # check assumption: expected counts >= 5
-round(main_test$stdres, 2)         # standardized residuals (beyond ±2 = notable)
-cramers_v(tab)                     # effect size
+# Helper: format p-values
+fmt_p <- function(p) ifelse(p < .001, "< .001", sprintf("%.3f", p))
 
-# Same test for every predictor, in one table
+# Helper: chi-square test of one predictor vs. productivity
 run_chisq <- function(data, var) {
   tab  <- table(data[[var]], data$productivity)
   test <- suppressWarnings(chisq.test(tab))
-  simulated <- min(test$expected) < 5          # fall back to simulation if cells are small
+  simulated <- min(test$expected) < 5          # use simulation if any expected count < 5
   if (simulated) test <- chisq.test(tab, simulate.p.value = TRUE, B = 10000)
   tibble(Predictor = var,
          N         = sum(tab),
@@ -186,57 +77,195 @@ run_chisq <- function(data, var) {
          CramersV  = round(cramers_v(tab), 3),
          Simulated = simulated)
 }
+```
+
+[WRITE A SHORT OVERVIEW OF YOUR RESULTS HERE.]
+
+### Work Arrangement
+
+```{r}
+#| label: fig-arrangement
+#| fig-cap: "Perceived Productivity Benefit by Current Work Arrangement"
+#| fig-width: 7
+#| fig-height: 4.5
+
+ggplot(df, aes(x = arrangement, fill = productivity)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = "Current Work Arrangement",
+       y = "Percentage of Respondents",
+       fill = "WFH Increases Productivity?") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+#| label: tbl-arrangement-desc
+#| tbl-cap: "Perceived Productivity Benefit by Current Work Arrangement"
+
+df %>%
+  group_by(`Work arrangement` = arrangement) %>%
+  summarise(N = n(),
+            `Said Yes` = sum(prod_bin),
+            `% Yes` = round(100 * mean(prod_bin), 1)) %>%
+  knitr::kable(align = "lrrr")
+```
+
+```{r}
+#| label: tbl-pairwise
+#| tbl-cap: "Pairwise Comparisons Between Work Arrangements (Holm-Adjusted p-values)"
+
+yes_n <- table(df$arrangement, df$productivity)[, "Yes"]
+tot_n <- rowSums(table(df$arrangement, df$productivity))
+pw <- pairwise.prop.test(yes_n, tot_n, p.adjust.method = "holm")$p.value
+
+as.data.frame(as.table(pw)) %>%
+  filter(!is.na(Freq)) %>%
+  transmute(`Group 1` = Var1, `Group 2` = Var2, `p (Holm)` = fmt_p(Freq)) %>%
+  knitr::kable(align = "llr")
+```
+
+[WRITE YOUR RESULTS FOR WORK ARRANGEMENT HERE. Cite the figure and tables with @fig-arrangement, @tbl-arrangement-desc, and @tbl-pairwise.]
+
+### Industry
+
+```{r}
+#| label: fig-industry
+#| fig-cap: "Perceived Productivity Benefit by Industry"
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(df, aes(x = industry, fill = productivity)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = "Industry",
+       y = "Percentage of Respondents",
+       fill = "WFH Increases Productivity?") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 35, hjust = 1),
+        legend.position = "bottom")
+```
+
+[WRITE YOUR RESULTS FOR INDUSTRY HERE. Cite the figure with @fig-industry.]
+
+### Age and Years of Experience
+
+[WRITE YOUR RESULTS FOR AGE AND YEARS OF EXPERIENCE HERE.]
+
+### Summary of Chi-Square Tests
+
+```{r}
+#| label: tbl-chisq
+#| tbl-cap: "Chi-Square Tests of Perceived Productivity by Predictor"
 
 chisq_results <- map_dfr(c("arrangement", "industry", "experience", "age"),
                          ~ run_chisq(df, .x)) %>%
-  mutate(p_holm = p.adjust(p, method = "holm"))   # correct for multiple tests
-chisq_results
+  mutate(p_holm = p.adjust(p, method = "holm"))   # correct for running multiple tests
 
-# Which arrangements differ from each other?
-pairwise.prop.test(table(df$arrangement, df$productivity)[, "Yes"],
-                   rowSums(table(df$arrangement, df$productivity)),
-                   p.adjust.method = "holm")
-
-# Residuals for industry (shows which industries drive the result)
-round(chisq.test(table(df$industry, df$productivity))$stdres, 2)
+chisq_results %>%
+  mutate(Predictor = recode(Predictor,
+                            arrangement = "Work arrangement",
+                            industry    = "Industry",
+                            experience  = "Years of experience",
+                            age         = "Age group"),
+         p      = fmt_p(p),
+         p_holm = fmt_p(p_holm)) %>%
+  select(Predictor, N, `χ²` = ChiSq, df, p, `p (Holm)` = p_holm, `Cramér's V` = CramersV) %>%
+  knitr::kable(align = "lrrrrrr")
 ```
 
-```{r}
-#| label: trend-tests
+[WRITE A SENTENCE OR TWO SUMMARIZING THE TESTS, citing @tbl-chisq. If any row shows NA for df, that test used a simulated p-value because some expected counts were below 5; say so.]
 
-# Does the odds of "Yes" rise or fall steadily across ordered groups?
+### Logistic Regression
+
+```{r}
+#| label: tbl-logistic
+#| tbl-cap: "Logistic Regression Predicting Perceived Productivity Increase (Odds Ratios)"
+
+# Copy of the data with Fully In-Office as the reference group for arrangement
+df_model <- df %>%
+  mutate(arrangement = relevel(factor(arrangement), ref = "Fully In-Office"))
+
+m <- glm(prod_bin ~ arrangement + experience + industry + age + gender,
+         data = df_model, family = binomial)
+
+coefs <- summary(m)$coefficients
+ci    <- confint.default(m)   # Wald 95% confidence intervals
+
+tibble(Term = rownames(coefs),
+       OR   = exp(coefs[, "Estimate"]),
+       `95% CI Lower` = exp(ci[, 1]),
+       `95% CI Upper` = exp(ci[, 2]),
+       p    = fmt_p(coefs[, "Pr(>|z|)"])) %>%
+  filter(Term != "(Intercept)") %>%
+  mutate(Term = str_replace(Term, "^(arrangement|experience|industry|age|gender)", "\\1: ")) %>%
+  knitr::kable(digits = 2, align = "lrrrr")
+```
+
+[WRITE YOUR LOGISTIC REGRESSION RESULTS HERE, citing @tbl-logistic. Odds ratios above 1 mean higher odds of reporting a productivity increase than the reference group.]
+
+### Exploratory Analyses
+
+```{r}
+#| label: tbl-trend
+#| tbl-cap: "Exploratory Trend Tests Across Ordered Age and Experience Groups"
+
 age_trend <- glm(prod_bin ~ age_num, data = df, family = binomial)
 exp_trend <- glm(prod_bin ~ exp_num, data = df, family = binomial)
 
-summary(age_trend)$coefficients   # significant age_num = linear trend with age
-summary(exp_trend)$coefficients   # significant exp_num = linear trend with experience
+trend_row <- function(model, label) {
+  cf <- summary(model)$coefficients
+  tibble(Predictor = label,
+         OR = exp(cf[2, "Estimate"]),
+         p  = fmt_p(cf[2, "Pr(>|z|)"]))
+}
+
+bind_rows(trend_row(age_trend, "Age group (per step up)"),
+          trend_row(exp_trend, "Years of experience (per step up)")) %>%
+  knitr::kable(digits = 2, align = "lrr")
 ```
 
 ```{r}
-#| label: logistic-regression
-
-# All predictors together; reference group for arrangement = Fully In-Office
-df$arrangement <- relevel(factor(df$arrangement), ref = "Fully In-Office")
-
-m <- glm(prod_bin ~ arrangement + experience + industry + age + gender,
-         data = df, family = binomial)
-summary(m)
-
-# Odds ratios with 95% confidence intervals
-or_table <- exp(cbind(OR = coef(m), suppressMessages(confint(m))))
-round(or_table, 2)
-
-# Does the full model beat an empty model?
-anova(m, test = "Chisq")
-```
-
-```{r}
-#| label: remote-only
+#| label: tbl-remote-only
+#| tbl-cap: "Chi-Square Tests Among Fully Remote Respondents Only"
 
 remote_only <- df %>% filter(arrangement == "Fully Remote")
 
-map_dfr(c("age", "experience"), ~ run_chisq(remote_only, .x))
+map_dfr(c("age", "experience"), ~ run_chisq(remote_only, .x)) %>%
+  mutate(Predictor = recode(Predictor, age = "Age group", experience = "Years of experience"),
+         p = fmt_p(p)) %>%
+  select(Predictor, N, `χ²` = ChiSq, df, p, `Cramér's V` = CramersV) %>%
+  knitr::kable(align = "lrrrrr")
 ```
+
+[OPTIONAL: DESCRIBE THESE EXPLORATORY RESULTS BRIEFLY, citing @tbl-trend and @tbl-remote-only, and note that they were not part of the primary analysis. Delete this whole subsection and the two chunks above if you would rather not include them.]
+
+```{r}
+#| label: extra-output-for-writing
+#| eval: false
+
+# NOT part of the rendered paper. Run these lines manually in RStudio
+# (green play button, or temporarily delete the "eval: false" line above)
+# to see extra numbers you may want to cite while writing.
+
+# Standardized residuals (beyond about +/-2 = notable)
+round(chisq.test(table(df$arrangement, df$productivity))$stdres, 2)
+round(chisq.test(table(df$industry, df$productivity))$stdres, 2)
+
+# Expected counts (assumption check: should be >= 5)
+round(chisq.test(table(df$arrangement, df$productivity))$expected, 1)
+
+# Does the full regression model beat an empty model?
+anova(m, test = "Chisq")
+
+# Row percentages by industry, age, and experience
+round(100 * prop.table(table(df$industry,   df$productivity), 1), 1)
+round(100 * prop.table(table(df$age,        df$productivity), 1), 1)
+round(100 * prop.table(table(df$experience, df$productivity), 1), 1)
+```
+
+```
+
 ## Bibliography
 
 https://www.kaggle.com/datasets/mohamedelzeini/the-impacts-of-working-remotely-and-in-an-office
