@@ -205,67 +205,8 @@ tibble(Term = rownames(coefs),
   knitr::kable(digits = 2, align = "lrrrr")
 ```
 
-[WRITE YOUR LOGISTIC REGRESSION RESULTS HERE, citing @tbl-logistic. Odds ratios above 1 mean higher odds of reporting a productivity increase than the reference group.]
+In the multivariable logistic regression (@tbl-logistic) work arrangment was the strongest predictor of perceived productivity. Relative to fully in-office workers, fully remote and hybrid workers had substanitally higher odds of reporting productivity increases. Technology workers had higher odds while education workers had one of the lowest odds. Other demographics (age, years of experience, and gender) were not signifcant predictors.
 
-### Exploratory Analyses
-
-```{r}
-#| label: tbl-trend
-#| tbl-cap: "Exploratory Trend Tests Across Ordered Age and Experience Groups"
-
-age_trend <- glm(prod_bin ~ age_num, data = df, family = binomial)
-exp_trend <- glm(prod_bin ~ exp_num, data = df, family = binomial)
-
-trend_row <- function(model, label) {
-  cf <- summary(model)$coefficients
-  tibble(Predictor = label,
-         OR = exp(cf[2, "Estimate"]),
-         p  = fmt_p(cf[2, "Pr(>|z|)"]))
-}
-
-bind_rows(trend_row(age_trend, "Age group (per step up)"),
-          trend_row(exp_trend, "Years of experience (per step up)")) %>%
-  knitr::kable(digits = 2, align = "lrr")
-```
-
-```{r}
-#| label: tbl-remote-only
-#| tbl-cap: "Chi-Square Tests Among Fully Remote Respondents Only"
-
-remote_only <- df %>% filter(arrangement == "Fully Remote")
-
-map_dfr(c("age", "experience"), ~ run_chisq(remote_only, .x)) %>%
-  mutate(Predictor = recode(Predictor, age = "Age group", experience = "Years of experience"),
-         p = fmt_p(p)) %>%
-  select(Predictor, N, `χ²` = ChiSq, df, p, `Cramér's V` = CramersV) %>%
-  knitr::kable(align = "lrrrrr")
-```
-
-[OPTIONAL: DESCRIBE THESE EXPLORATORY RESULTS BRIEFLY, citing @tbl-trend and @tbl-remote-only, and note that they were not part of the primary analysis. Delete this whole subsection and the two chunks above if you would rather not include them.]
-
-```{r}
-#| label: extra-output-for-writing
-#| eval: false
-
-# NOT part of the rendered paper. Run these lines manually in RStudio
-# (green play button, or temporarily delete the "eval: false" line above)
-# to see extra numbers you may want to cite while writing.
-
-# Standardized residuals (beyond about +/-2 = notable)
-round(chisq.test(table(df$arrangement, df$productivity))$stdres, 2)
-round(chisq.test(table(df$industry, df$productivity))$stdres, 2)
-
-# Expected counts (assumption check: should be >= 5)
-round(chisq.test(table(df$arrangement, df$productivity))$expected, 1)
-
-# Does the full regression model beat an empty model?
-anova(m, test = "Chisq")
-
-# Row percentages by industry, age, and experience
-round(100 * prop.table(table(df$industry,   df$productivity), 1), 1)
-round(100 * prop.table(table(df$age,        df$productivity), 1), 1)
-round(100 * prop.table(table(df$experience, df$productivity), 1), 1)
-```
 
 ```
 
