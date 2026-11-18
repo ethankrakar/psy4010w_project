@@ -83,6 +83,7 @@ run_chisq <- function(data, var) {
 
 ### Work Arrangement
 
+
 ```{r}
 #| label: fig-arrangement
 #| fig-cap: "Perceived Productivity Benefit by Current Work Arrangement"
@@ -125,7 +126,9 @@ as.data.frame(as.table(pw)) %>%
   knitr::kable(align = "llr")
 ```
 
-The results from the work arrangement section show that those who work remotely and hybrid are 4 to 5 times as likely as in office workers to say working from home boosts productivity. Hybrid and remote workers don't diffe from each other. 
+
+The results from the work arrangement section show that those who work remotely and hybrid are 4 to 5 times as likely as in office workers to say working from home boosts productivity. Hybrid and remote workers don't differ from each other. 
+
 
 ### Industry
 
